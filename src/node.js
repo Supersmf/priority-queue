@@ -88,7 +88,9 @@ class Node {
 		parent.appendChild(leftChild);
 		parent.appendChild(rightChild);
 
-		if (grandpa) grandpa.appendChild(this);
+		if (grandpa){
+			grandpa.appendChild(this);
+		}
 	}
 }
 

@@ -1,4 +1,5 @@
 class Node {
+	
 	constructor(data, priority) {
 		
 		this.data = data;
@@ -10,86 +11,86 @@ class Node {
 
 	appendChild(node) {
 		
-		if (!node) return;
-		
-		if(!this.left){
-			
+		if (node == null) return;
+
+		if(this.left == null) {
 			this.left = node;
 			node.parent = this;
 			return;
 		}
-		
-		if(!this.right){
-			
+
+		if(this.right == null)	{
 			this.right = node;
 			node.parent = this;
 			return;
 		}
-		
-		return;
-
 	}
 
 	removeChild(node) {
 		
-		if(this.left == node){
+		if (this.left == node) {
 			this.left = null;
 			node.parent = null;
 			return;
-		}
-		
-		if(this.right == node){
+		} 
+
+		if (this.right == node) {
 			this.right = null;
 			node.parent = null;
 			return;
 		}
-		
-		throw new Error("Error of removing child");
 
+		throw new Error("Error from node.removeChild");
 	}
 
 	remove() {
 		
-		if(this.parent){
+		if (this.parent !== null) 
 			this.parent.removeChild(this);
-		}
 	}
 
 	swapWithParent() {
 		
-		if (!this.parent) return;
+		var	childNode = this;
+		var parentNode = this.parent;
+		var	tempNode = null;
+		var	marker = null;
 
-		
-		var leftChild = this.left;
-		var rightChild = this.right;
-		var parent = this.parent;
-		var parentLChild = parent.left;
-		var parentRChild = parent.right;
-		var grandpa = this.parent.parent;
-		
-		parent.remove();
-		if (leftChild)  leftChild.remove();
-		if (rightChild) rightChild.remove();
-
-		if (this === parentLChild) {
-			this.remove();
-			this.appendChild(parent);
-			this.appendChild(parentRChild);
-		}
-
-		if (this === parentRChild) {
-			this.remove();
-			this.appendChild(parent);
-			parentLChild.remove();
-			this.appendChild(parentLChild);
+		if (parentNode !== null){
 			
+			if (parentNode.left == childNode){
+				tempNode = parentNode.right;
+				marker = NaN;
+			}
+			else if (parentNode.right == childNode){
+				tempNode = parentNode.left;
+			}
+		}else return;
+		
+		if (parentNode.parent !== null){
+			
+			if (parentNode == parentNode.parent.right){
+				parentNode.parent.right = childNode;
+			} else parentNode.parent.left = childNode;		
 		}
 
-		parent.appendChild(leftChild);
-		parent.appendChild(rightChild);
+		if (this.left !== null) this.left.parent = this.parent;
+		if (this.right !== null) this.right.parent = this.parent;
+		
+		this.parent.left = this.left;
+		this.parent.right = this.right;
+		this.parent = parentNode.parent;
+		parentNode.parent = childNode;
 
-		if (grandpa){
-			grandpa.appendChild(this);
+		if (tempNode !== null) tempNode.parent = childNode;
+
+		if (marker !== null){
+			childNode.right = tempNode;
+			childNode.left = parentNode;
+		}
+		else {
+			childNode.left = tempNode;
+			childNode.right = parentNode;
 		}
 	}
 }
